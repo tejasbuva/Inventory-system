@@ -1,0 +1,43 @@
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/login.css' %}"/>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/sign-in/">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/bootstrap.min.css' %}"/>
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href='{% static "CSS/login.css" %}' rel="stylesheet"/>
+</head>
+<body class="text-center">
+<div class="form-signin">
+    <img class="mb-4" src='{% static "img/Laptop.png" %}' alt="" width="72" height="72">
+    <h1 class="h4 mb-4 font-weight-normal">Welcome to Inventory</h1>
+<!--    <form class="site-form" action="/accounts/login" method="post">-->
+
+    <form class="form-signin" action="login" method="post">
+        {% csrf_token %}
+        {{form|crispy}}
+        <input type="submit" value="Login" class="btn btn- btn btn-outline-info">
+    </form>
+</div>
+</body>
+</html>

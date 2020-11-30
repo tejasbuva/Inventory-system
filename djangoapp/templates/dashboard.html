@@ -1,0 +1,131 @@
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>{{ title }}</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/bootstrap.min.css' %}">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+
+
+
+
+
+    </style>
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="{% static 'CSS/stylesheet.css' %}"/>
+    <link rel="stylesheet" href="{% static 'CSS/summary.css' %}"/>
+</head>
+<body>
+<form id="logoutForm" action="logout" method="post">{% csrf_token %}</form>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="/dashboard">Laptop Inventory Management</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li style="float: right;">
+                <a class="nav-link">{{request.user}} - {{request.user.groups.get.name}}<span
+                        class="sr-only">(current)</span></a>
+            </li>
+            {% if request.user.groups.get.name == "Accountant" %}
+            <li style="float: right;">
+                <a class="nav-link" href="/summary">Summary <span class="sr-only">(current)</span></a>
+            </li>
+            {% else %}
+            <li style="float: right;">
+                <a class="nav-link" href="/additems">Add New Product <span class="sr-only">(current)</span></a>
+            </li>
+            {% endif %}
+            {% if request.user.is_authenticated %}
+            <li style="float: right;">
+                <a href="javascript:{}" onclick="document.getElementById('logoutForm').submit(); return false;"
+                   class="nav-link">Logout</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<main role="main" class="container">
+    <div class="jumbotron">
+        <h1 class="title">Product Overview</h1>
+<!--        <form method="post" action="">-->
+<!--            {% csrf_token %}-->
+<!--            {{form|crispy}}-->
+<!--            <input class="btn btn-primary" type="submit" value="Search"/>-->
+<!--        </form>-->
+        <table>
+            <tr>
+                <th>#</th>
+                <th>Product Name</th>
+                <th>Status</th>
+                <th>Serial No.</th>
+                <th>Issues</th>
+                <th>Cost in Euro</th>
+                <th>User</th>
+                <th>Group</th>
+                <th>Description</th>
+                <th>Purchase Date</th>
+                <th>Date Modified</th>
+                {% if request.user.groups.get.name != "Accountant"%}
+                <th>Edit</th>
+                <th>Delete</th>
+                {% endif %}
+            </tr>
+            {% for product in products %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{product.Product_Name}}</td>
+                <td>{{product.Status}}</td>
+                <td>{{product.Serial_No}}</td>
+                <td>{{product.Issues}}</td>
+                <td>{{product.Cost_in_Euro}}</td>
+                <td>{{product.User_Name}}</td>
+                <td>{{product.Product_Group}}</td>
+                <td>{{product.Description}}</td>
+                <td>{{product.Purchase_Date}}</td>
+                <td>{{product.Date_Modified}}</td>
+                {% if request.user.groups.get.name != "Accountant"%}
+                <td><a href="{% url 'product_edit' id=product.id %}">Edit</a></td>
+                <td><a href="{% url 'product_delete' id=product.id %}">Delete</a></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="tags">
+        {% for product in products %}
+        {% for Tag in product.product_tags %}
+        <a class="category mb-5" href="./?tags__icontains={{ Tag }}&ordering=">{{ Tag }}</a>
+        {% endfor %}
+        <br>
+        {% endfor %}
+    </div>
+</main>
+<script src="{% static 'js/summary.js' %}"></script>
+<script>window.jQuery || document.write('<script src="{% static 'js/summary.js' %}"><\/script>')</script>
+<script src="{% static 'js/bootstrap.bundle.summary.js' %}"></script>
+</body>
+</html>

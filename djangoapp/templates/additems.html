@@ -1,0 +1,87 @@
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>{{title}}</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/bootstrap.min.css' %}">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+    </style>
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/summary.css' %}"/>
+    <link href="{% static 'js/jqueryui/jquery-ui.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jqueryui/jquery-ui.structure.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jqueryui/jquery-ui.theme.min.css' %}" rel="stylesheet">
+</head>
+<body>
+<form id="logoutForm" action="logout" method="post">{% csrf_token %}</form>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="/dashboard">Laptop Inventory Management</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li style="float: right;">
+                <a class="nav-link">{{request.user}} - {{request.user.groups.get.name}}<span class="sr-only">(current)</span></a>
+            </li>
+            {% if request.user.groups.get.name == "Accountant" %}
+            <li style="float: right;">
+                <a class="nav-link" href="/summary">Summary <span class="sr-only">(current)</span></a>
+            </li>
+            {% else %}
+            <li style="float: right;">
+                <a class="nav-link" href="/additems">Add New Product <span class="sr-only">(current)</span></a>
+            </li>
+            {% endif %}
+            {% if request.user.is_authenticated %}
+            <li style="float: right;">
+                <a href="javascript:{}" onclick="document.getElementById('logoutForm').submit(); return false;"
+                   class="nav-link">Logout</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+<main role="main" class="container">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-6">
+                <link rel="stylesheet" href="{% static 'CSS/additem.css' %}"/>
+                <h1>Add/Edit Product</h1>
+                <form method="post" action=" ">
+                    {% csrf_token %}
+                    {{form|crispy}}
+                    <input class="btn btn-primary" type="submit" value="Save"/>
+                    <td>* To avoid data duplication just add in the units of the existing product.</td>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/jqueryui/jquery-ui.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+</body>
+</html>
